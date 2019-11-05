@@ -107,13 +107,31 @@ jobs:
           root: target
           paths:
             - doc
-  rustwin:
+  rust-win:
     executor:
       name: win/default
       shell: powershell.exe
-    resource_class: large
+      size: large
     steps:
       - checkout
+      - restore_cache:
+          key: rust-win-cargo-v3-{{ checksum "Cargo.lock" }}
+      - run:
+          name: Install Rust Toolchain
+          command: |
+            choco install rustup.install
+            rustup toolchain install "$(cat rust-toolchain)-msvc"
+            rustc --version --verbose
+            cargo --version --verbose
+      - run:
+          name: Install MRI Ruby
+          command: |
+            choco install ruby --version=2.6.3.1
+            ruby --version
+      - run:
+          name: Build Workspace
+          command: |
+            cargo build
   c:
     docker:
       - image: circleci/node:lts
