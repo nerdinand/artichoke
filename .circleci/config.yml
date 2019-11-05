@@ -125,8 +125,8 @@ jobs:
             $progressPreference = 'silentlyContinue'
             Invoke-WebRequest -Uri $url -OutFile $outpath
             $toolchain = [IO.File]::ReadAllText(".\rust-toolchain")
-            Start-Process -Filepath "rustup-init.exe"
-            rustup profile set minimal
+            .\rustup-init.exe
+            rustup.exe profile set minimal
             rustup toolchain install "$($toolchain)-msvc"
             rustc --version --verbose
             cargo --version --verbose
