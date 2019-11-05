@@ -132,11 +132,6 @@ jobs:
           name: Build Workspace
           command: |
             cargo build
-      - save_cache:
-          key: rust-win-cargo-v3-{{ checksum "Cargo.lock" }}
-          paths:
-            - C:\Users\circleci\.cargo
-            - target
   c:
     docker:
       - image: circleci/node:lts
