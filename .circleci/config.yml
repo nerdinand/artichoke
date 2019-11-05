@@ -117,6 +117,7 @@ jobs:
       - run:
           name: Install Rust Toolchain
           command: |
+            $env:Path += ";%USERPROFILE%\.cargo\bin"
             $url = "https://win.rustup.rs/x86_64"
             $outpath = "rustup‑init.exe"
             # If Invoke-WebRequest shows a progress bar, it will fail with
@@ -125,8 +126,8 @@ jobs:
             Invoke-WebRequest -Uri $url -OutFile $outpath
             $toolchain = [IO.File]::ReadAllText(".\rust-toolchain")
             Start-Process -Filepath "rustup-init.exe"
-            $args = @("toolchain","install","$($toolchain)-msvc")
-            Start-Process rustup.exe -ArgumentList $args
+            rustup.exe profile set minimal
+            rustup.exe toolchain install "$($toolchain)-msvc"
             rustc.exe --version --verbose
             cargo.exe --version --verbose
       - run:
@@ -137,10 +138,13 @@ jobs:
       - run:
           name: Build Workspace
           command: |
+            $env:Path += ";%USERPROFILE%\.cargo\bin"
             cargo.exe build
       - run:
           name: Test Workspace
-          command: cargo.exe test --all-features
+          command: |
+            $env:Path += ";%USERPROFILE%\.cargo\bin"
+            cargo.exe test --all-features
           environment:
             RUST_BACKTRACE: 1
   c:
