@@ -110,7 +110,6 @@ jobs:
   rust-win:
     executor:
       name: win/default
-      size: large
     steps:
       - checkout
       - restore_cache:
