@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   shellcheck: circleci/shellcheck@1
+  win: circleci/windows@2.1.0
 commands:
   rubocop:
     description: Lint Ruby sources with RuboCop
@@ -106,6 +107,36 @@ jobs:
           root: target
           paths:
             - doc
+  rust-win:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    resource_class: large
+    steps:
+      - checkout
+      - restore_cache:
+          key: rust-win-cargo-v3-{{ checksum "Cargo.lock" }}
+      - run:
+          name: Install Rust Toolchain
+          command: |
+            choco install rustup.install
+            rustup toolchain install "$(cat rust-toolchain)-msvc"
+            rustc --version --verbose
+            cargo --version --verbose
+      - run:
+          name: Install MRI Ruby
+          command: |
+            choco install ruby --version=2.6.3.1
+            ruby --version
+      - run:
+          name: Build Workspace
+          command: |
+            cargo build
+      - save_cache:
+          key: rust-win-cargo-v3-{{ checksum "Cargo.lock" }}
+          paths:
+            - "C:\Users\circleci\.cargo"
+            - "target"
   c:
     docker:
       - image: circleci/node:lts
@@ -221,6 +252,7 @@ workflows:
   build:
     jobs:
       - rust
+      - rust-win
       - c
       - ruby
       - js
