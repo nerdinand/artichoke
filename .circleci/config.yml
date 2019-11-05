@@ -119,6 +119,9 @@ jobs:
           command: |
             $url = "https://win.rustup.rs/x86_64"
             $outpath = ".\rustup‑init.exe"
+            # If Invoke-WebRequest shows a progress bar, it will fail with
+            #   Win32 internal error "Access is denied" 0x5 occurred [...]
+            $progressPreference = 'silentlyContinue'
             Invoke-WebRequest -Uri $url -OutFile $outpath
             $toolchain = [IO.File]::ReadAllText(".\rust-toolchain")
             Start-Process -Filepath ".\rustup-init.exe"
@@ -129,7 +132,7 @@ jobs:
       - run:
           name: Install MRI Ruby
           command: |
-            choco install ruby --version=2.6.3.1
+            choco install ruby --no-progress --version=2.6.3.1
             ruby.exe --version
       - run:
           name: Build Workspace
