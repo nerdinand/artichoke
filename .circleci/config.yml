@@ -132,6 +132,11 @@ jobs:
           name: Build Workspace
           command: |
             cargo build
+      - run:
+          name: Test Workspace
+          command: cargo test --all-features
+          environment:
+            RUST_BACKTRACE: 1
   c:
     docker:
       - image: circleci/node:lts
@@ -247,6 +252,7 @@ workflows:
   build:
     jobs:
       - rust
+      - rust-win
       - c
       - ruby
       - js
