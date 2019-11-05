@@ -126,10 +126,10 @@ jobs:
             Invoke-WebRequest -Uri $url -OutFile $outpath
             $toolchain = [IO.File]::ReadAllText(".\rust-toolchain")
             Start-Process -Filepath "rustup-init.exe"
-            rustup.exe profile set minimal
-            rustup.exe toolchain install "$($toolchain)-msvc"
-            rustc.exe --version --verbose
-            cargo.exe --version --verbose
+            rustup profile set minimal
+            rustup toolchain install "$($toolchain)-msvc"
+            rustc --version --verbose
+            cargo --version --verbose
       - run:
           name: Install MRI Ruby
           command: |
