@@ -117,8 +117,13 @@ jobs:
       - run:
           name: Install Rust Toolchain
           command: |
-            choco install rustup.install
-            rustup.exe toolchain install "$(cat rust-toolchain)-msvc"
+            $url = "https://win.rustup.rs/x86_64"
+            $outpath = "$PSScriptRoot/rustup‑init.exe"
+            Invoke-WebRequest -Uri $url -OutFile $outpath
+            $toolchain = [IO.File]::ReadAllText(".\test.txt")
+            Start-Process -Filepath "$PSScriptRoot/rustup-init"
+            $args = @("toolchain","install","$($toolchain)-msvc")
+            Start-Process rustup.exe -ArgumentList $args
             rustc.exe --version --verbose
             cargo.exe --version --verbose
       - run:
