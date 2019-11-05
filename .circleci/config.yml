@@ -118,7 +118,7 @@ jobs:
           name: Install Rust Toolchain
           command: |
             $url = "https://win.rustup.rs/x86_64"
-            $outpath = ".\rustup‑init.exe"
+            $outpath = "rustup‑init.exe"
             # If Invoke-WebRequest shows a progress bar, it will fail with
             #   Win32 internal error "Access is denied" 0x5 occurred [...]
             $progressPreference = 'silentlyContinue'
