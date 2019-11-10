@@ -8,12 +8,7 @@
 #
 # This build can be nulled out once the Artichoke runtime is complete.
 MRuby::Build.new do |conf|
-  # Gets set by the VS command prompts.
-  if ENV['VisualStudioVersion'] || ENV['VSINSTALLDIR']
-    toolchain :visualcpp
-  else
-    toolchain :clang
-  end
+  toolchain :visualcpp
   conf.gperf.command = 'true'
   conf.gperf.compile_options = ''
 

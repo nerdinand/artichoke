@@ -151,14 +151,12 @@ jobs:
           command: |
             $env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
             $env:RUST_BACKTRACE = "1"
-            $env:VSINSTALLDIR = "1"
             cargo build
       - run:
           name: Test Workspace
           command: |
             $env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
             $env:RUST_BACKTRACE = "1"
-            $env:VSINSTALLDIR = "1"
             cargo test --all-features
           environment:
             RUST_BACKTRACE: 1
