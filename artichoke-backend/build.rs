@@ -413,7 +413,7 @@ mod rubylib {
             "English",
             "erb",
             "etc",
-            "expect",
+            // "expect", not available in CI for Windows
             // "extmk", this is part of ext for building native extensions
             "fcntl",
             "fiddle",
@@ -454,7 +454,7 @@ mod rubylib {
             "profiler",
             "pstore",
             "psych",
-            "pty",
+            // "pty", not available in CI for Windows
             // "racc", racc is a gem
             "racc/parser",
             // "rake", rake is a gem
@@ -478,7 +478,7 @@ mod rubylib {
             "stringio",
             "strscan",
             "sync",
-            "syslog",
+            // "syslog", not available in CI on Windows
             "tempfile",
             "thwait",
             "time",
