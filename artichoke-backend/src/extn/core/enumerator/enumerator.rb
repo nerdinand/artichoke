@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # enumerator.rb Enumerator class
 # See Copyright Notice in mruby.h
@@ -114,11 +116,11 @@ class Enumerator
   #
   # Use of this form is discouraged.  Use Kernel#enum_for or Kernel#to_enum
   # instead.
-  def initialize(obj = (not_set = true), meth=:each, *args, &block)
+  def initialize(obj = (not_set = true), meth = :each, *args, &block)
     if block
       obj = Generator.new(&block)
     elsif not_set
-      raise ArgumentError, "wrong number of arguments (given 0, expected 1+)"
+      raise ArgumentError, 'wrong number of arguments (given 0, expected 1+)'
     end
 
     @obj = obj
@@ -134,8 +136,9 @@ class Enumerator
   attr_reader :fib
 
   def initialize_copy(obj)
-    raise TypeError, "can't copy type #{obj.class}" unless obj.kind_of? Enumerator
+    raise TypeError, "can't copy type #{obj.class}" unless obj.is_a? Enumerator
     raise TypeError, "can't copy execution context" if obj.fib
+
     @obj = obj.obj
     @meth = obj.meth
     @args = obj.args
@@ -156,19 +159,20 @@ class Enumerator
   #
   # +offset+:: the starting index to use
   #
-  def with_index(offset=0, &block)
+  def with_index(offset = 0, &block)
     return to_enum :with_index, offset unless block
 
-    if offset.nil?
-      offset = 0
-    else
-      offset = offset.__to_int
-    end
+    offset =
+      if offset.nil?
+        0
+      else
+        offset.to_int
+      end
 
     n = offset - 1
-    enumerator_block_call do |*i|
+    enumerator_block_call do |i|
       n += 1
-      block.call i.__svalue, n
+      block.call(i, n)
     end
   end
 
@@ -217,14 +221,14 @@ class Enumerator
     return to_enum(:with_object, object) unless block
 
     enumerator_block_call do |i|
-      block.call [i,object]
+      block.call [i, object]
     end
     object
   end
 
   def inspect
-    if @args && @args.size > 0
-      args = @args.join(", ")
+    if @args && !@args.empty?
+      args = @args.join(', ')
       "#<#{self.class}: #{@obj.inspect}:#{@meth}(#{args})>"
     else
       "#<#{self.class}: #{@obj.inspect}:#{@meth}>"
@@ -269,8 +273,8 @@ class Enumerator
   #
   def each(*argv, &block)
     obj = self
-    if 0 < argv.length
-      obj = self.dup
+    unless argv.empty?
+      obj = dup
       args = obj.args
       if !args.empty?
         args = args.dup
@@ -281,13 +285,14 @@ class Enumerator
       obj.args = args
     end
     return obj unless block
+
     enumerator_block_call(&block)
   end
 
   def enumerator_block_call(&block)
     @obj.__send__ @meth, *@args, &block
   end
-  private :enumerator_block_call
+  private :enumerator_block_call # rubocop:disable Style/AccessModifierDeclarations
 
   ##
   # call-seq:
@@ -310,7 +315,7 @@ class Enumerator
   # side-effect
   #
   def next
-    next_values.__svalue
+    next_values
   end
 
   ##
@@ -377,9 +382,9 @@ class Enumerator
             feedvalue = @feedvalue
             @feedvalue = nil
           end
-          feedvalue
+          feedvalue # rubocop:disable Lint/Void
         end
-        @stop_exc = StopIteration.new "iteration reached an end"
+        @stop_exc = StopIteration.new 'iteration reached an end'
         @stop_exc.result = result
         Fiber.yield nil
       end
@@ -418,7 +423,7 @@ class Enumerator
   #   p e.next   #raises StopIteration
   #
   def peek
-    peek_values.__svalue
+    peek_values
   end
 
   ##
@@ -448,9 +453,7 @@ class Enumerator
   #   p e.peek_values    # raises StopIteration
   #
   def peek_values
-    if @lookahead.nil?
-      @lookahead = next_values
-    end
+    @lookahead = next_values if @lookahead.nil?
     @lookahead.dup
   end
 
@@ -518,7 +521,8 @@ class Enumerator
   #                       # (10)
   #
   def feed(value)
-    raise TypeError, "feed value already set" if @feedvalue
+    raise TypeError, 'feed value already set' if @feedvalue
+
     @feedvalue = value
     nil
   end
@@ -527,7 +531,7 @@ class Enumerator
   class Generator
     include Enumerable
     def initialize(&block)
-      raise TypeError, "wrong argument type #{self.class} (expected Proc)" unless block.kind_of? Proc
+      raise TypeError, "wrong argument type #{self.class} (expected Proc)" unless block.is_a? Proc
 
       @proc = block
     end
@@ -541,7 +545,7 @@ class Enumerator
   # just for internal
   class Yielder
     def initialize(&block)
-      raise LocalJumpError, "no block given" unless block
+      raise LocalJumpError, 'no block given' unless block
 
       @proc = block
     end
@@ -550,7 +554,7 @@ class Enumerator
       @proc.call(*args)
     end
 
-    def << *args
+    def <<(*args)
       self.yield(*args)
       self
     end
@@ -577,21 +581,22 @@ class Enumerator
   #
   #   ancestors = Enumerator.produce(node) { |prev| node = prev.parent or raise StopIteration }
   #   enclosing_section = ancestors.find { |n| n.type == :section }
-  def Enumerator.produce(init=NONE, &block)
-    raise ArgumentError, "no block given" if block.nil?
+  def self.produce(init = (not_set = true), &block)
+    raise ArgumentError, 'no block given' if block.nil?
+
     Enumerator.new do |y|
-      if init == NONE
+      if not_set
         val = nil
       else
         val = init
         y.yield(val)
       end
       begin
-        while true
+        loop do
           y.yield(val = block.call(val))
         end
       rescue StopIteration
-        # do nothing
+        nil
       end
     end
   end
@@ -644,7 +649,7 @@ module Kernel
   #       # => returns an Enumerator when called without a block
   #     enum.first(4) # => [1, 1, 1, 2]
   #
-  def to_enum(meth=:each, *args)
+  def to_enum(meth = :each, *args)
     Enumerator.new self, meth, *args
   end
   alias enum_for to_enum
@@ -654,27 +659,26 @@ module Enumerable
   # use Enumerator to use infinite sequence
   def zip(*args, &block)
     args = args.map do |a|
-      if a.respond_to?(:each)
-        a.to_enum(:each)
-      else
-        raise TypeError, "wrong argument type #{a.class} (must respond to :each)"
-      end
+      raise TypeError, "wrong argument type #{a.class} (must respond to :each)" unless a.respond_to?(:each)
+
+      a.to_enum(:each)
     end
 
     result = block ? nil : []
 
-    each do |*val|
-      tmp = [val.__svalue]
+    each do |val|
+      tmp = [val]
       args.each do |arg|
-        v = if arg.nil?
-          nil
-        else
-          begin
-            arg.next
-          rescue StopIteration
+        v =
+          if arg.nil?
             nil
+          else
+            begin
+              arg.next
+            rescue StopIteration
+              nil
+            end
           end
-        end
         tmp.push(v)
       end
       if result.nil?
