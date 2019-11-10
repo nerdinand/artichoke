@@ -98,8 +98,8 @@ module MRuby
       MRuby::Build.current = MRuby.targets[@name]
       MRuby.targets[@name].instance_eval(&block)
 
-      # build_mrbc_exec if name == 'host'
-      # build_mrbtest if test_enabled?
+      build_mrbc_exec if name == 'host'
+      build_mrbtest if test_enabled?
     end
 
     def debug_enabled?
@@ -236,7 +236,7 @@ EOS
     end
 
     def build_mrbc_exec
-      gem :core => 'mruby-bin-mrbc'
+      # gem :core => 'mruby-bin-mrbc'
     end
 
     def locks
@@ -248,9 +248,8 @@ EOS
 
       mrbc_build = MRuby.targets['host']
       gems.each { |v| mrbc_build = self if v.name == 'mruby-bin-mrbc' }
+      FileUtils.touch("#{mrbc_build.build_dir}/bin/mrbc")
       @mrbcfile = mrbc_build.exefile("#{mrbc_build.build_dir}/bin/mrbc")
-      FileUtils.touch(@mrbcfile)
-      @mrbcfile
     end
 
     def compilers
@@ -384,6 +383,7 @@ EOS
     end
 
     def mrbcfile
+      FileUtils.touch("#{MRuby.targets['host'].build_dir}/bin/mrbc")
       MRuby.targets['host'].exefile("#{MRuby.targets['host'].build_dir}/bin/mrbc")
     end
 
