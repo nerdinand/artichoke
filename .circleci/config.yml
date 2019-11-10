@@ -121,7 +121,7 @@ jobs:
             $client = new-object System.Net.WebClient
             $client.DownloadFile('https://win.rustup.rs', "$pwd\rustup-init.exe")
             .\rustup-init.exe -y
-            $env:Path += ";%USERPROFILE%.cargo\bin"
+            $env:Path += ";%USERPROFILE%\.cargo\bin"
             rustup set profile minimal
             $toolchain = [IO.File]::ReadAllText(".\rust-toolchain")
             rustup toolchain install "$($toolchain)-msvc"
@@ -135,12 +135,12 @@ jobs:
       - run:
           name: Build Workspace
           command: |
-            $env:Path += ";%USERPROFILE%.cargo\bin"
+            $env:Path += ";%USERPROFILE%\.cargo\bin"
             cargo build
       - run:
           name: Test Workspace
           command: |
-            $env:Path += ";%USERPROFILE%.cargo\bin"
+            $env:Path += ";%USERPROFILE%\.cargo\bin"
             cargo test --all-features
           environment:
             RUST_BACKTRACE: 1
