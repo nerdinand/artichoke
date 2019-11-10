@@ -30,6 +30,7 @@ MRuby::Build.new do |conf|
   conf.bins = []
   conf.gembox File.join(File.dirname(File.absolute_path(__FILE__)), 'bootstrap')
 
+  FileUtils.mkdir_p("#{build_dir}/bin")
   FileUtils.touch("#{build_dir}/bin/mrbc")
 end
 
@@ -57,5 +58,6 @@ MRuby::CrossBuild.new('sys') do |conf|
   # gemset for mruby artichoke static lib
   conf.gembox File.join(File.dirname(File.absolute_path(__FILE__)), 'sys')
 
+  FileUtils.mkdir_p("#{build_dir}/bin")
   FileUtils.touch("#{build_dir}/bin/mrbc")
 end
