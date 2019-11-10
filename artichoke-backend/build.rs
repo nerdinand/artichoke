@@ -28,7 +28,7 @@ mod buildpath {
 
         pub fn mruby_build_config(target: &Triple) -> PathBuf {
             if let OperatingSystem::Windows = target.operating_system {
-                super::crate_root().join("muruby_build_config_windows.rb")
+                super::crate_root().join("mruby_build_config_windows.rb")
             } else {
                 super::crate_root().join("mruby_build_config_unix.rb")
             }
