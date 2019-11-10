@@ -175,7 +175,7 @@ pub fn bytes_to_osstr<'a>(
 ) -> Result<&'a OsStr, Box<dyn RubyException>> {
     use crate::extn::core::exception::Fatal;
 
-    if let Ok(converted) = str::from_utf8(value) {
+    if let Ok(converted) = std::str::from_utf8(value) {
         Ok(OsStr::new(converted))
     } else {
         Err(Box::new(Fatal::new(
