@@ -8,12 +8,17 @@
 #
 # This build can be nulled out once the Artichoke runtime is complete.
 MRuby::Build.new do |conf|
-  toolchain :visualcpp
-
+  conf.cc.command = 'true'
+  conf.cxx.command = 'true'
+  conf.objc.command = 'true'
+  conf.asm.command = 'true'
   conf.gperf.command = 'true'
   conf.gperf.compile_options = ''
+  conf.linker.command = 'true'
+  conf.archiver.command = 'true'
+  conf.mrbc.command = 'true'
 
-  conf.bins = ['mrbc']
+  conf.bins = []
   conf.gembox File.join(File.dirname(File.absolute_path(__FILE__)), 'bootstrap')
 end
 
@@ -28,6 +33,7 @@ MRuby::CrossBuild.new('sys') do |conf|
   conf.gperf.compile_options = ''
   conf.linker.command = 'true'
   conf.archiver.command = 'true'
+  conf.mrbc.command = 'true'
 
   # C compiler settings
   # https://github.com/mruby/mruby/blob/master/doc/guides/mrbconf.md#other-configuration

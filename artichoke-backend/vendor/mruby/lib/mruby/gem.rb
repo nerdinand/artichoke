@@ -165,7 +165,7 @@ module MRuby
       def generate_gem_init(fname)
         open(fname, 'w') do |f|
           print_gem_init_header f
-          build.mrbc.run f, rbfiles, "gem_mrblib_irep_#{funcname}" unless rbfiles.empty?
+          # build.mrbc.run f, rbfiles, "gem_mrblib_irep_#{funcname}" unless rbfiles.empty?
           f.puts %Q[void mrb_#{funcname}_gem_init(mrb_state *mrb);]
           f.puts %Q[void mrb_#{funcname}_gem_final(mrb_state *mrb);]
           f.puts %Q[]
@@ -173,7 +173,7 @@ module MRuby
           f.puts %Q[  int ai = mrb_gc_arena_save(mrb);]
           f.puts %Q[  mrb_#{funcname}_gem_init(mrb);] if objs != [objfile("#{build_dir}/gem_init")]
           unless rbfiles.empty?
-            f.puts %Q[  mrb_load_irep(mrb, gem_mrblib_irep_#{funcname});]
+            # f.puts %Q[  mrb_load_irep(mrb, gem_mrblib_irep_#{funcname});]
             f.puts %Q[  if (mrb->exc) {]
             f.puts %Q[    mrb_print_error(mrb);]
             f.puts %Q[    mrb_close(mrb);]

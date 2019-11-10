@@ -20,18 +20,15 @@ mod buildpath {
 
     pub mod source {
         use std::path::PathBuf;
-        use target_lexicon::{OperatingSystem, Triple};
+        use target_lexicon::Triple;
 
         pub fn ruby_vendored_lib_dir() -> PathBuf {
             super::crate_root().join("vendor").join("ruby").join("lib")
         }
 
-        pub fn mruby_build_config(target: &Triple) -> PathBuf {
-            if let OperatingSystem::Windows = target.operating_system {
-                super::crate_root().join("mruby_build_config_windows.rb")
-            } else {
-                super::crate_root().join("mruby_build_config_unix.rb")
-            }
+        pub fn mruby_build_config(triple: &Triple) -> PathBuf {
+            let _ = triple;
+            super::crate_root().join("mruby_build_config_null.rb")
         }
 
         pub fn mruby_bootstrap_gembox() -> PathBuf {
