@@ -125,7 +125,7 @@ jobs:
           name: Install Rust Toolchain
           command: |
             rustup set profile minimal
-            $toolchain = [IO.File]::ReadAllText(".\rust-toolchain")
+            $toolchain = Get-Content rust-toolchain | Select-Object -First 1
             rustup toolchain install "$($toolchain)-msvc"
             # This is necessary because otherwise cargo fails when trying to use git?
             mkdir .cargo
