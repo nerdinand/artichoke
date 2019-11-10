@@ -98,8 +98,8 @@ module MRuby
       MRuby::Build.current = MRuby.targets[@name]
       MRuby.targets[@name].instance_eval(&block)
 
-      build_mrbc_exec if name == 'host'
-      build_mrbtest if test_enabled?
+      # build_mrbc_exec if name == 'host'
+      # build_mrbtest if test_enabled?
     end
 
     def debug_enabled?
