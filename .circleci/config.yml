@@ -117,14 +117,11 @@ jobs:
       - run:
           name: Install Rust Toolchain
           command: |
-            $url = "https://win.rustup.rs"
-            $outpath = "$pwd\rustup‑init.exe"
-            # If Invoke-WebRequest shows a progress bar, it will fail with
-            #   Win32 internal error "Access is denied" 0x5 occurred [...]
-            $progressPreference = 'silentlyContinue'
-            Invoke-WebRequest -Uri $url -OutFile $outpath
+            # Install rustup
+            $client = new-object System.Net.WebClient
+            $client.DownloadFile('https://win.rustup.rs', "$pwd\rustup-init.exe")
             .\rustup-init.exe -y
-            rustup.exe profile set minimal
+            rustup profile set minimal
             $toolchain = [IO.File]::ReadAllText(".\rust-toolchain")
             rustup toolchain install "$($toolchain)-msvc"
             rustc --version --verbose
