@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'fileutils'
 require 'rbconfig'
 
 def windows?
@@ -28,6 +29,8 @@ MRuby::Build.new do |conf|
 
   conf.bins = []
   conf.gembox File.join(File.dirname(File.absolute_path(__FILE__)), 'bootstrap')
+
+  FileUtils.touch("#{build_dir}/bin/mrbc")
 end
 
 # This cross-build generates C sources so `build.rs` can compile them into a
@@ -53,4 +56,6 @@ MRuby::CrossBuild.new('sys') do |conf|
 
   # gemset for mruby artichoke static lib
   conf.gembox File.join(File.dirname(File.absolute_path(__FILE__)), 'sys')
+
+  FileUtils.touch("#{build_dir}/bin/mrbc")
 end
