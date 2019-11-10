@@ -140,12 +140,17 @@ jobs:
           command: |
             choco install llvm
       - run:
+          name: Install bison
+          command: |
+            choco install winflexbison
+      - run:
           name: Installed Toolchain Versions
           command: |
             rustc --version --verbose
             cargo --version --verbose
             ruby --version
             clang --version
+            bison --version
       - run:
           name: Build Workspace
           command: |
