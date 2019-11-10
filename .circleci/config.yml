@@ -62,7 +62,7 @@ jobs:
             bison --version
       - run:
           # needed for cc crate in build.rs
-          name: Install mruby-sys Build Dependencies
+          name: Install clang
           command: |
             sudo apt-get install -y clang
             clang --version
@@ -137,6 +137,12 @@ jobs:
           command: |
             choco install ruby --no-progress --version=2.6.3.1
             ruby --version
+      - run:
+          # needed for cc crate in build.rs
+          name: Install clang
+          command: |
+            choco install llvm
+            clang --version
       - run:
           name: Build Workspace
           command: |
