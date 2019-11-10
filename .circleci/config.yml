@@ -107,7 +107,7 @@ jobs:
           root: target
           paths:
             - doc
-  rust-win:
+  artichoke-x86_64-windows:
     executor:
       name: win/default
     steps:
@@ -117,16 +117,15 @@ jobs:
       - run:
           name: Install Rust Toolchain
           command: |
-            $env:Path += ";%USERPROFILE%\.cargo\bin"
             $url = "https://win.rustup.rs/x86_64"
-            $outpath = "rustup‑init.exe"
+            $outpath = "$pwd\rustup‑init.exe"
             # If Invoke-WebRequest shows a progress bar, it will fail with
             #   Win32 internal error "Access is denied" 0x5 occurred [...]
             $progressPreference = 'silentlyContinue'
             Invoke-WebRequest -Uri $url -OutFile $outpath
-            $toolchain = [IO.File]::ReadAllText(".\rust-toolchain")
-            .\rustup-init.exe
+            .\rustup-init.exe -y
             rustup.exe profile set minimal
+            $toolchain = [IO.File]::ReadAllText(".\rust-toolchain")
             rustup toolchain install "$($toolchain)-msvc"
             rustc --version --verbose
             cargo --version --verbose
@@ -134,17 +133,15 @@ jobs:
           name: Install MRI Ruby
           command: |
             choco install ruby --no-progress --version=2.6.3.1
-            ruby.exe --version
+            ruby --version
       - run:
           name: Build Workspace
           command: |
-            $env:Path += ";%USERPROFILE%\.cargo\bin"
-            cargo.exe build
+            cargo build
       - run:
           name: Test Workspace
           command: |
-            $env:Path += ";%USERPROFILE%\.cargo\bin"
-            cargo.exe test --all-features
+            cargo test --all-features
           environment:
             RUST_BACKTRACE: 1
   c:
