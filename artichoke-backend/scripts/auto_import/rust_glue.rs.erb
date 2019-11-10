@@ -20,7 +20,10 @@ pub fn init(interp: &Artichoke) -> Result<(), ArtichokeError> {
     <% sources.each do |(file, source)| %>
     interp.def_rb_source_file(
         "<%= file %>.rb",
-        include_str!(concat!(env!("OUT_DIR"), "/src/generated/<%= file %>.rb"))
+        include_str!(concat!(
+          env!("OUT_DIR"),
+          "<%= File::ALT_SEPARATOR.nil? ? File::SEPARATOR : File::ALT_SEPARATOR %>", "<%= File.join("src", "generated", "#{file}.rb") %>"
+        ))
     )?;
     <% end %>
     Ok(())
