@@ -259,7 +259,7 @@ workflows:
   build:
     jobs:
       - rust
-      - rust-win
+      - artichoke-x86_64-windows
       - c
       - ruby
       - js
