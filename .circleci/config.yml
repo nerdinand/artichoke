@@ -149,10 +149,12 @@ jobs:
       - run:
           name: Build Workspace
           command: |
+            $env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
             cargo build
       - run:
           name: Test Workspace
           command: |
+            $env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
             cargo test --all-features
           environment:
             RUST_BACKTRACE: 1
