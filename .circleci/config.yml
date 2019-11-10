@@ -113,7 +113,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: rust-win-cargo-v3-{{ checksum "Cargo.lock" }}
+          key: rust-win-cargo-v1-{{ checksum "Cargo.lock" }}
       - run:
           name: Install rustup
           command: |
@@ -127,6 +127,9 @@ jobs:
             rustup set profile minimal
             $toolchain = [IO.File]::ReadAllText(".\rust-toolchain")
             rustup toolchain install "$($toolchain)-msvc"
+            # This is necessary because otherwise cargo fails when trying to use git?
+            mkdir .cargo
+            Add-Content .cargo\config "[net]`ngit-fetch-with-cli = true"
             rustc --version --verbose
             cargo --version --verbose
       - run:
@@ -145,7 +148,7 @@ jobs:
           environment:
             RUST_BACKTRACE: 1
       - save_cache:
-          key: rust-cargo-v3-{{ checksum "Cargo.lock" }}
+          key: rust-win-cargo-v1-{{ checksum "Cargo.lock" }}
           paths:
             - C:\Users\cicleci\.cargo
             - target
