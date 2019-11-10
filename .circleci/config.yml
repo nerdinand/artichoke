@@ -117,7 +117,7 @@ jobs:
       - run:
           name: Install Rust Toolchain
           command: |
-            $url = "https://win.rustup.rs/x86_64"
+            $url = "https://win.rustup.rs"
             $outpath = "$pwd\rustup‑init.exe"
             # If Invoke-WebRequest shows a progress bar, it will fail with
             #   Win32 internal error "Access is denied" 0x5 occurred [...]
@@ -144,6 +144,11 @@ jobs:
             cargo test --all-features
           environment:
             RUST_BACKTRACE: 1
+      - save_cache:
+          key: rust-cargo-v3-{{ checksum "Cargo.lock" }}
+          paths:
+            - C:\Users\cicleci\.cargo
+            - target
   c:
     docker:
       - image: circleci/node:lts
