@@ -130,18 +130,21 @@ jobs:
             # This is necessary because otherwise cargo fails when trying to use git?
             mkdir .cargo
             Add-Content .cargo\config "[net]`ngit-fetch-with-cli = true"
-            rustc --version --verbose
-            cargo --version --verbose
       - run:
           name: Install MRI Ruby
           command: |
             choco install ruby --no-progress --version=2.6.3.1
-            ruby --version
       - run:
           # needed for cc crate in build.rs
           name: Install clang
           command: |
             choco install llvm
+      - run:
+          name: Installed Toolchain Versions
+          command: |
+            rustc --version --verbose
+            cargo --version --verbose
+            ruby --version
             clang --version
       - run:
           name: Build Workspace
