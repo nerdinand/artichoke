@@ -132,7 +132,8 @@ mod libmruby {
             "cargo:rerun-if-changed={}",
             build_config().to_str().unwrap()
         );
-        if !Command::new(mruby_minirake())
+        if !Command::new("ruby")
+            .arg(mruby_minirake())
             .arg("--jobs")
             .arg("4")
             .env("MRUBY_BUILD_DIR", mruby_build_dir())

@@ -8,7 +8,8 @@
 #
 # This build can be nulled out once the Artichoke runtime is complete.
 MRuby::Build.new do |conf|
-  toolchain :visualcpp
+  toolchain :clang
+
   conf.gperf.command = 'true'
   conf.gperf.compile_options = ''
 

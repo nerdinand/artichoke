@@ -149,17 +149,18 @@ jobs:
       - run:
           name: Build Workspace
           command: |
-            $env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
-            $env:RUST_BACKTRACE = "1"
             cargo build
+          environment:
+            RUST_BACKTRACE: 1
+            LIBCLANG_PATH: C:\Program Files\LLVM\bin
+
       - run:
           name: Test Workspace
           command: |
-            $env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
-            $env:RUST_BACKTRACE = "1"
             cargo test --all-features
           environment:
             RUST_BACKTRACE: 1
+            LIBCLANG_PATH: C:\Program Files\LLVM\bin
       - save_cache:
           key: rust-win-cargo-v1-{{ checksum "Cargo.lock" }}
           paths:
