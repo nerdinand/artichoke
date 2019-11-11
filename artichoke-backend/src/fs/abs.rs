@@ -408,7 +408,7 @@ mod tests {
                 env::current_dir().unwrap().components().take(2), // the prefix (C:) and root (\) components
             );
 
-            let expected = PathAbs::new(current_drive_root.join("foo")).unwrap();
+            let expected = PathAbs::new(current_drive_root.join("foo"), "").unwrap();
 
             assert_eq!(actual, expected);
         }
@@ -432,7 +432,7 @@ mod tests {
             setup();
             let path = PathAbs::new(r"\\?\bogus\path\", "").unwrap();
 
-            assert_eq!(path.as_os_str(), r"\\?\bogus\path");
+            assert_eq!(path::Path::as_os_str(path), r"\\?\bogus\path");
         }
     }
 
