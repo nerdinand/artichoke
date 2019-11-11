@@ -384,7 +384,7 @@ mod tests {
             );
 
             let path = PathAbs::new(raw_path, "").unwrap();
-            assert_eq!(path.as_os_str(), r"\\?\C:\does\not\exist");
+            assert_eq!(path::Path::as_os_str(path), r"\\?\C:\does\not\exist");
         }
 
         #[test]
@@ -418,8 +418,11 @@ mod tests {
             setup();
             let actual = PathAbs::new(r"C:foo", "").unwrap();
 
-            let expected =
-                PathAbs::new(path::Path::new(r"C:").canonicalize().unwrap().join("foo")).unwrap();
+            let expected = PathAbs::new(
+                path::Path::new(r"C:").canonicalize().unwrap().join("foo"),
+                "",
+            )
+            .unwrap();
 
             assert_eq!(actual, expected);
         }
