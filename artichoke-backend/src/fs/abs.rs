@@ -435,7 +435,7 @@ mod tests {
             setup();
             let path = PathAbs::new(r"\\?\bogus\path\", "").unwrap();
 
-            assert_eq!(path::Path::as_os_str(path), r"\\?\bogus\path");
+            assert_eq!(path::Path::as_os_str(path.as_path()), r"\\?\bogus\path");
         }
     }
 
