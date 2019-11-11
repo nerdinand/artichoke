@@ -273,10 +273,12 @@ mod libmruby {
                 .clang_arg(r#"-DMRB_API=__attribute__((visibility("default")))"#);
         }
         if let OperatingSystem::Windows = triple.operating_system {
-            let intheaders = super::buildpath::crate_root()
+            let headers = super::buildpath::crate_root()
                 .join("vendor")
-                .join("msinttypes-r26");;
-            bindgen = bindgen.clang_arg(format!("-I{}", intheaders.to_str().unwrap()));
+                .join("mingw-w64-v6.0.0")
+                .join("mingw-w64-headers")
+                .join("crt");
+            bindgen = bindgen.clang_arg(format!("-I{}", headers.to_str().unwrap()));
         }
         if env::var("CARGO_FEATURE_ARTICHOKE_ARRAY").is_ok() {
             bindgen = bindgen.clang_arg("-DARTICHOKE");
