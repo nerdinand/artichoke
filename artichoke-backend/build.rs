@@ -245,10 +245,7 @@ mod libmruby {
             "cargo:rerun-if-changed={}",
             bindgen_source_header().to_str().unwrap()
         );
-        let bindings_out_path = PathBuf::from(super::buildpath::crate_root())
-            .join("src")
-            .join("sys")
-            .join("ffi.rs");
+        let bindings_out_path = PathBuf::from(env::var("OUT_DIR").unwrap()).join("ffi.rs");
         let mut bindgen = bindgen::Builder::default()
             .header(bindgen_source_header().to_str().unwrap())
             .clang_arg(format!("-I{}", mruby_include_dir().to_str().unwrap()))
@@ -275,6 +272,9 @@ mod libmruby {
                 .clang_arg(format!("-I{}", wasm_include_dir().to_str().unwrap()))
                 .clang_arg(r#"-DMRB_API=__attribute__((visibility("default")))"#);
         }
+        if let OperatingSystem::Windows = triple.operating_system {
+            bindgen = bindgen.clang_arg("-D_MSC_VER=1000");
+        }
         if env::var("CARGO_FEATURE_ARTICHOKE_ARRAY").is_ok() {
             bindgen = bindgen.clang_arg("-DARTICHOKE");
         }
@@ -294,9 +294,7 @@ mod libmruby {
             "MRB_INT64"
         };
         staticlib(&triple, mrb_int);
-        if env::var_os("ARTICHOKE_FORCE_BINDGEN").is_some() {
-            bindgen(&triple, mrb_int);
-        }
+        bindgen(&triple, mrb_int);
     }
 }
 
