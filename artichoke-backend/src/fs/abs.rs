@@ -377,14 +377,17 @@ mod tests {
             setup();
 
             // It's not likely this path would exist, but let's be sure.
-            let raw_path = path::Path::new(r"C:\does\not\exist", "");
+            let raw_path = path::Path::new(r"C:\does\not\exist");
             assert_eq!(
                 raw_path.metadata().unwrap_err().kind(),
                 io::ErrorKind::NotFound,
             );
 
             let path = PathAbs::new(raw_path, "").unwrap();
-            assert_eq!(path::Path::as_os_str(path), r"\\?\C:\does\not\exist");
+            assert_eq!(
+                path::Path::as_os_str(path.as_path()),
+                r"\\?\C:\does\not\exist"
+            );
         }
 
         #[test]
