@@ -45,8 +45,16 @@ impl Detector {
     }
 }
 
+#[cfg(unix)]
 fn resident_memsize() -> i64 {
     let mut out: libc::rusage = unsafe { mem::zeroed() };
     assert!(unsafe { libc::getrusage(libc::RUSAGE_SELF, &mut out) } == 0);
     out.ru_maxrss
+}
+
+#[cfg(not(unix))]
+fn resident_memsize() -> i64 {
+    // Disable leak tests on non-Unix platforms where the libc crate does not
+    // offer `rusage` APIs.
+    0
 }
