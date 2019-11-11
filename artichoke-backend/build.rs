@@ -273,7 +273,7 @@ mod libmruby {
                 .clang_arg(r#"-DMRB_API=__attribute__((visibility("default")))"#);
         }
         if let OperatingSystem::Windows = triple.operating_system {
-            bindgen = bindgen.clang_arg("-D_MSC_VER=1000");
+            bindgen = bindgen.clang_arg(r"-IC:\Program Files\Windows Kits\10\Include\10.1.18362.1");
         }
         if env::var("CARGO_FEATURE_ARTICHOKE_ARRAY").is_ok() {
             bindgen = bindgen.clang_arg("-DARTICHOKE");
