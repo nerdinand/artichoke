@@ -29,3 +29,7 @@ This fork is based on [Ruby 2.6.3](https://github.com/ruby/ruby/tree/v2_6_3) and
 [emsdk](https://github.com/emscripten-core/emsdk) contains headers for the C
 standard library that target wasm32-unknown-emscripten and wasm32-unknown-unkown
 targets.
+
+# msinttypes
+
+[msinttypes](https://code.google.com/archive/p/msinttypes/downloads) contains `stdint.h` and `inttypes.h` headers for Windows.
