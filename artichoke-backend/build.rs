@@ -324,6 +324,7 @@ mod rubylib {
             let sources = package_files(package)
                 .trim()
                 .split("\n")
+                .map(str::trim)
                 .filter(|s| !s.is_empty())
                 .map(String::from)
                 .collect::<Vec<_>>();
