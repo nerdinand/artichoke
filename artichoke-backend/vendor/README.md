@@ -32,4 +32,12 @@ targets.
 
 # msinttypes
 
-[msinttypes](https://code.google.com/archive/p/msinttypes/downloads) contains `stdint.h` and `inttypes.h` headers for Windows.
+[msinttypes](https://code.google.com/archive/p/msinttypes/downloads) contains
+`stdint.h` and `inttypes.h` headers for Windows.
+
+# mingw
+
+[mingw](http://mingw-w64.org/doku.php#headers_libraries_and_runtime) contains
+headers for the C standard library that target the Windows operating system.
+
+mingw is licensed with the [Zope Public License](mingw-w64-v6.0.0/COPYING).
