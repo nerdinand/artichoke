@@ -328,10 +328,14 @@ mod rubylib {
                 .map(String::from)
                 .collect::<Vec<_>>();
             sources.par_iter().for_each(|source| {
-                let package_source = PathBuf::from(source.to_owned());
+                eprintln!("source = {:?}", source);
+                let source = PathBuf::from(source.to_owned());
+                eprintln!("source = {:?}", source);
                 let package_source =
-                    package_source.strip_prefix(buildpath::source::ruby_vendored_lib_dir());
+                    source.strip_prefix(buildpath::source::ruby_vendored_lib_dir());
+                eprintln!("package source = {:?}", package_source);
                 let out = generated_package_dir().join(package_source.unwrap());
+                eprintln!("out = {:?}", out);
                 if let Some(parent) = out.parent() {
                     fs::create_dir_all(parent).unwrap();
                 }
